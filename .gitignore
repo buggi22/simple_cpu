@@ -1,2 +1,5 @@
 alu_tb
 ram_tb
+cpu_tb
+computer_tb
+*.swp
