@@ -2,5 +2,5 @@ This is a Verilog implementation of the simple "Hack" CPU described in Noam Nisa
 
 The file computer.v contains the high-level architecture of the system, and computer_tb.v is a test-bench for running simulations of the system.
 
-The script  has been created to make it easy to compile and run test-benches using Icarus Verilog for Linux.  To run the test-bench of the overall system, simply type:
+The script builder.sh has been created to make it easy to compile and run test-benches using Icarus Verilog for Linux.  To run the test-bench of the overall system, simply type:
     $ ./builder.sh computer
