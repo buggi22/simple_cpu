@@ -2,8 +2,7 @@
 
 module test;
 
-parameter MemAddrSize = `DefaultAddrSize;
-parameter MemAndIOAddrSize = `DefaultAddrSize + 1;
+parameter MemAddrSize = `DefaultMemAndIOAddrSize;
 parameter ProgAddrSize = `DefaultProgAddrSize;
 parameter WordSize = `DefaultWordSize;
 
@@ -12,39 +11,29 @@ reg [WordSize-1:0] instruction;
 reg reset;
 wire [WordSize-1:0] outM;
 wire writeM;
-wire [MemAndIOAddrSize-1:0] addressM;
-wire [ProgAddrSize-1:0] pc;
+wire [MemAddrSize-1:0] addressM;
+wire [ProgAddrSize-1:0] progCounter;
 
 reg clk;
 
-cpu DUT (inM, instruction, reset, outM, writeM, addressM, pc, clk);
+cpu DUT (inM, instruction, reset, outM, writeM, addressM, progCounter, clk);
 
 always
 	#(`ClockPulseWidth) clk = ~clk;
 
 initial begin
-	$monitor("At time %t, clk = %d, in = %d, address = %d, load = %d ==> value = %d",
-			$time, clk, in, address, load, value);
+	$monitor("At time %t, clk = %d, inM = %d, instruction = %b, reset = %d, outM = %d, writeM = %d, addressM = %d, progCounter = %d",
+			$time, clk, inM, instruction, reset,
+			outM, writeM, addressM, progCounter);
 
 	clk <= 1;
-	in <= 0; load <= 0; address <= 0;
-/*
-	@(negedge clk)	load <= 0;
-	@(negedge clk)	begin
-		in <= 3; load <= 1;
-	end
-	@(negedge clk)	load <= 0;
-	@(negedge clk)	in <= 2;
-	@(negedge clk)	load <= 1;
-	@(negedge clk)	load <= 0;
-	@(negedge clk)	address <= 1;
-	@(negedge clk)	load <= 1;
-	@(negedge clk)	load <= 0;
-	@(negedge clk)	address <= 0;
-	@(negedge clk)	in <= 7;
-	@(negedge clk)	load <= 1;
-	@(negedge clk)	load <= 0;
-*/	@(negedge clk)	#(2*`ClockPulseWidth)	$finish;
+
+	inM <= 0; instruction <= 0; reset <= 0;
+
+	@(negedge clk)	reset <= 1;
+	@(negedge clk)	reset <= 0;
+
+	@(negedge clk)	#(4*`ClockPulseWidth)	$finish;
 end
 
 endmodule
